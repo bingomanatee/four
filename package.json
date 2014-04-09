@@ -1,6 +1,6 @@
 {
   "name": "four",
-  "version": "0.0.1",
+  "version": "0.0.1a",
   "devDependencies": {
     "grunt": "^0.4.4",
     "grunt-contrib-concat": "^0.4.0",
@@ -14,5 +14,10 @@
     "fools": "0.0.9",
     "three": "^0.66.2",
     "lodash": "^2.4.1"
-  }
+  },
+  "repository" :
+  { "type" : "git",
+    "url": "git://github.com/bingomanatee/objective-three.git"
+  },
+  "homepage": "https://github.com/bingomanatee/four"
 }
