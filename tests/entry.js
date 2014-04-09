@@ -1,12 +1,12 @@
 require('chai').should();
-var FOUR_D = require('./../4d');
+var FOUR = require('./../FOUR');
 
-describe('4d', function () {
+describe('FOUR', function () {
 
   describe('#Sequence', function () {
 
     describe('#next', function () {
-      var sequence = new FOUR_D.Sequence();
+      var sequence = new FOUR.Sequence();
       it('should increment time', function () {
         sequence.add([1,2,3]).time.should.equal(0);
       });
@@ -22,7 +22,7 @@ describe('4d', function () {
               [1, 2, 3],
               [4, 5, 6]
             ];
-            sequence = new FOUR_D.Sequence({data: data});
+            sequence = new FOUR.Sequence({data: data});
           });
 
           it('should import arrays of position', function () {
@@ -41,7 +41,7 @@ describe('4d', function () {
               [1, 2, 3, 10, 20, 30],
               [4, 5, 6, 40, 50, 60]
             ];
-            sequence = new FOUR_D.Sequence({data: data, autoTime: true});
+            sequence = new FOUR.Sequence({data: data, autoTime: true});
           });
           it('should allow importing of position and direction arrays', function () {
             sequence.toString().should.equal("1,2,3d10,20,30t0\n4,5,6d40,50,60t-1");
@@ -59,7 +59,7 @@ describe('4d', function () {
             {x: 1, y: 2, z: 3},
             {x: 4, y: 5, z: 6}
           ];
-          sequence = new FOUR_D.Sequence({data: data});
+          sequence = new FOUR.Sequence({data: data});
         });
 
         it('should allow importing of object data', function () {
@@ -81,7 +81,7 @@ describe('4d', function () {
             {x: 4, y: 5, z: 6, i: 40, j: 50, k: 60}
           ];
 
-          sequence = new FOUR_D.Sequence({data: data, DX: 'i', DY: 'j', DZ: 'k'});
+          sequence = new FOUR.Sequence({data: data, DX: 'i', DY: 'j', DZ: 'k'});
         });
 
         it('should allow importing of object location and direction', function(){
@@ -101,7 +101,7 @@ describe('4d', function () {
       var sequence;
 
       before(function(){
-          sequence = new FOUR_D.Sequence({data: [
+          sequence = new FOUR.Sequence({data: [
             [0, 0, 0],
             [0, 10, 0],
             [10, 10, 0],

@@ -1,15 +1,23 @@
-4D is a generalized library for time/space analysis. It allows you to build an array of time/space data and analyze it
+FOUR is a generalized library for time/space analysis. It allows you to build an array of time/space data and analyze it
 for patterns.
 
 Each record in a series is linked with a prev/next reference, and there are methods for speed, bend (change in direction),
 median sampling around a given point, and more.
 
-## Benefits of 4D
+## Benefits of FOUR
 
-4D allows you to easily extract a set of similar properties, and even use Fools methods
+FOUR allows you to easily extract a set of similar properties, and even use Fools methods
 to pipe those properties into a reductor. It allows you to operate in multiple levels of
 data smoothing to zero in on the appropriate smoothness settings. In the absence
 of explicit time data, you can set what level of smoothed data you operate on.
+
+It has a couple of useful methods such as tangent, speed, distance, all of which can be
+tuned to be based on smoothed data or to reach out a few points ahead and behind.
+
+Also each point is given a next/prev reference for easy relative comparison.
+
+It has the ability to cap series of points, which culls the next/prev reference appropriately.
+The smoothing even preserves smoothing cache based on previous smoothing history.
 
 ## Smoothed location parameter
 
@@ -23,8 +31,6 @@ Values over 0.666 or so are not advised.
 
 Smoothing is an incremental value -- it calculates based on the previous record; so, the first time a
 a smoothed record is requested, a series of back-calculations are run over the previous history.
-
-
 
 ## Records
 

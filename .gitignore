@@ -1,14 +1,5 @@
 .DS_Store
 
-/.idea/.name
-/.idea/4d.iml
-/.idea/encodings.xml
-/.idea/jsLibraryMappings.xml
-/.idea/libraries/4d_node_modules.xml
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/scopes/
-/.idea/vcs.xml
-/.idea/workspace.xml
+/.idea/*
 
 /node_modules/

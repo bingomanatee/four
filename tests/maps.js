@@ -1,10 +1,10 @@
-var FOUR_D = require('./../4d');
+var FOUR = require('./../FOUR');
 require('chai').should();
 var _ = require('lodash');
 var util = require('util');
 var THREE = require('three');
 
-describe('4d', function () {
+describe('FOUR', function () {
 
   describe('speed x bend', function () {
 
@@ -27,7 +27,7 @@ describe('4d', function () {
     }
 
     before(function () {
-      sequence = new FOUR_D.Sequence({
+      sequence = new FOUR.Sequence({
         autoTime: true,
         timeInc: -0.01,
         data: _.map(_.range(0, 36), function (x, i) {

@@ -1,26 +1,30 @@
 function _ld_type(data) {
   if (!data) {
-    return FOUR_D.DT_EMPTY;
+    return FOUR.DT_EMPTY;
   } else if (_.isArray(data)) {
-    return FOUR_D.DT_ARRAY;
+    return FOUR.DT_ARRAY;
   } else if (_.isObject(data)) {
     if (_.isFunction(data.getColumnFromMatrix)) {
-      return FOUR_D.DT_VECTOR3;
+      return FOUR.DT_VECTOR3;
     } else {
-      return FOUR_D.DT_OBJECT;
+      return FOUR.DT_OBJECT;
     }
   } else {
-    return FOUR_D.DT_EMPTY;
+    return FOUR.DT_EMPTY;
   }
 }
 
-FOUR_D.DT_EMPTY = 0;
-FOUR_D.DT_ARRAY = 1;
-FOUR_D.DT_OBJECT = 2;
-FOUR_D.DT_VECTOR3 = 3;
+FOUR.DT_EMPTY = 0;
+FOUR.DT_ARRAY = 1;
+FOUR.DT_OBJECT = 2;
+FOUR.DT_VECTOR3 = 3;
+
+function _smoothIndex(number) {
+  return Math.floor(number * 10000) + '';
+}
 
 var _recordId = 0;
-FOUR_D.Record = function (location, time, direction, meta) {
+FOUR.Record = function (location, time, direction, meta) {
   this.time = !time ? 0 : ( _.isDate(direction) ? direction.getTime() : (_.isNumber(time) ? time : 0));
   this.location = location;
   this.l_type = _ld_type(location);
@@ -28,9 +32,10 @@ FOUR_D.Record = function (location, time, direction, meta) {
   this.d_type = _ld_type(direction);
   this.meta = meta ? ( _.isObject(meta) ? meta : {id: meta}) : {};
   this.id = this.meta.hasOwnProperty('id') ? meta.id : ++_recordId;
+  this._smooths = {};
 };
 
-FOUR_D.Record.prototype = {
+FOUR.Record.prototype = {
 
   toString: function () {
     return this.la(true).join(',') + 'd' + this.da().join(',') + 't' + this.time;
@@ -38,19 +43,19 @@ FOUR_D.Record.prototype = {
 
   la: function (fast) {
     switch (this.l_type) {
-      case FOUR_D.DT_EMPTY:
+      case FOUR.DT_EMPTY:
         return [0, 0, 0];
         break;
 
-      case FOUR_D.DT_ARRAY:
+      case FOUR.DT_ARRAY:
         return fast ? this.location : this.location.slice();
         break;
 
-      case FOUR_D.DT_OBJECT:
+      case FOUR.DT_OBJECT:
         return [this.location.x, this.location.y, this.location.z];
         break;
 
-      case FOUR_D.DT_VECTOR3:
+      case FOUR.DT_VECTOR3:
         return [this.location.x, this.location.y, this.location.z];
         break;
 
@@ -61,19 +66,19 @@ FOUR_D.Record.prototype = {
 
   da: function (fast) {
     switch (this.d_type) {
-      case FOUR_D.DT_EMPTY:
+      case FOUR.DT_EMPTY:
         return [0, 0, 0];
         break;
 
-      case FOUR_D.DT_ARRAY:
+      case FOUR.DT_ARRAY:
         return fast ? this.direction : this.direction.slice();
         break;
 
-      case FOUR_D.DT_OBJECT:
+      case FOUR.DT_OBJECT:
         return [this.direction.x, this.direction.y, this.direction.z];
         break;
 
-      case FOUR_D.DT_VECTOR3:
+      case FOUR.DT_VECTOR3:
         return [this.direction.x, this.direction.y, this.direction.z];
         break;
 
@@ -83,20 +88,20 @@ FOUR_D.Record.prototype = {
   },
 
   v: function () {
-    if (this.l_type == FOUR_D.DT_VECTOR3) {
+    if (this.l_type == FOUR.DT_VECTOR3) {
       return this.location;
     } else if (!this._v) {
       switch (this.l_type) {
-        case FOUR_D.DT_ARRAY:
+        case FOUR.DT_ARRAY:
           this._v = new Vector3(this.location[0], this.location[1], this.location[2]);
           break;
 
-        case FOUR_D.DT_OBJECT:
+        case FOUR.DT_OBJECT:
           this._v = new Vector3();
           this._v.copy(this.location);
           break;
 
-        case FOUR_D.DT_EMPTY:
+        case FOUR.DT_EMPTY:
           this._v = new Vector3();
           break;
 
@@ -109,7 +114,7 @@ FOUR_D.Record.prototype = {
   },
 
   distance: function (smoothing) {
-    smoothing = smoothing ||  0;
+    smoothing = smoothing || 0;
     if (!this.next) {
       return 0;
     }
@@ -144,7 +149,7 @@ FOUR_D.Record.prototype = {
 
   },
 
-  speed: function(distance, smoothing){
+  speed: function (distance, smoothing) {
 
     var next = this.next;
     var prev = this.prev;
@@ -166,8 +171,8 @@ FOUR_D.Record.prototype = {
     do {
       travel += prev.distance(smoothing);
       prev = prev.next
-    } while(next !== prev);
-    return Math.abs(travel /time);
+    } while (next !== prev);
+    return Math.abs(travel / time);
   },
 
   /**
@@ -209,42 +214,60 @@ FOUR_D.Record.prototype = {
 
 
     var dist = prevLoc.distanceTo(nextLoc);
-    var bend =  dist/2;
+    var bend = dist / 2;
     return bend * bend;
   },
 
   smoothLoc: function (smoothing) {
-    if ((!this.next) || (!smoothing)) {
+    if (smoothing == 0) {
       return this.v();
     }
+    var index = _smoothIndex(smoothing);
 
-    var index = Math.round(10000 * smoothing).toString();
-    if (!this._smooths) {
-      this._smooths = {};
+    if (this._smooths[index]){
+      return this._smooths[index];
     }
 
-    var next = this.next;
-    while(next && (!(next._smooths && next._smooths.hasOwnProperty(index)))){
-      if (next.next){
-        next = next.next;
-      }
+    var next = this;
+    while (next.next && (!next._smooths.hasOwnProperty(index))
+      ) {
+      next = next.next;
     }
 
-    while(next !== this){
-      if (!next._smooths){
-        next._smooths = {};
-      }
-      if (!next._smooths[index]){
-        if (next.next && next.next._smooths && next.next._smooths[index]){
-          var base = next.next._smooths[index];
-          next._smooths[index] = base.clone().multiplyScalar(1 - smoothing);
-          next._smooths[index].add(next.v().clone().multiplyScalar(smoothing));
-          next = next === this ? null :  next.prev;
-        }
-      }
+    if (!next) {
+      debugger;
     }
 
+    while(next && !next._smooths[index]) {
+      next._smooth(smoothing, index);
+      next = next.prev;
+    }
+
+    if (!this._smooths[index]) {
+      this._smooth(smoothing, index);
+    }
     return this._smooths[index];
+  },
+
+  _smooth: function (smoothing, index) {
+    if (!index) {
+      index = _smoothIndex(smoothing);
+    }
+
+    if (!this._smooths.hasOwnProperty(index)) {
+      if (this.next) {
+        if (this.next._smooths[index]) {
+
+          var basis = this.next._smooths[index].clone().multiplyScalar(smoothing);
+          basis.add(this.v().clone().multiplyScalar(1 - smoothing));
+        }
+
+        this._smooths[index] = basis;
+
+      } else {
+        this._smooths[index] = this.v().clone();
+      }
+    }
   },
 
   medianLocation: function (spread) {
@@ -273,7 +296,7 @@ FOUR_D.Record.prototype = {
       zs.push(v.z);
     });
 
-    return new Vector3(FOUR_D.stat.median(xs), FOUR_D.stat.median(ys), FOUR_D.stat.median(zs));
+    return new Vector3(FOUR.stat.median(xs), FOUR.stat.median(ys), FOUR.stat.median(zs));
   },
 
   /**

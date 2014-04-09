@@ -1,4 +1,4 @@
-var FOUR_D = require('./../4d');
+var FOUR = require('./../FOUR');
 var csv = require('csv-stream');
 var fs = require('fs');
 var util = require('util');
@@ -13,7 +13,7 @@ var options = {
 
 var csvStream = csv.createStream(options);
 
-var sequence = new FOUR_D.Sequence({autoTime: true , timeInc: 0.001});
+var sequence = new FOUR.Sequence({autoTime: true , timeInc: 0.001});
 
 fs.createReadStream(__dirname + '/points.csv').pipe(csvStream).on('error', function(err){
   console.log(err);

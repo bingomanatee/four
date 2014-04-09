@@ -4,7 +4,7 @@ var util = require('util');
  * note - Sequence assumes data is in descending order -- i.e.,first record is the most recent.
  *
  */
-FOUR_D.Sequence = function (config) {
+FOUR.Sequence = function (config) {
   this.data = [];
   this.timeInc = 1;
   this.capSize = 0;
@@ -22,7 +22,11 @@ FOUR_D.Sequence = function (config) {
   }
 };
 
-FOUR_D.Sequence.prototype = {
+
+FOUR.inherits(FOUR.Sequence, EventEmitter);
+
+_.extend(
+FOUR.Sequence.prototype, {
 
   DX: 'dx',
   DY: 'dy',
@@ -46,7 +50,7 @@ FOUR_D.Sequence.prototype = {
       }
     }
 
-    var record = new FOUR_D.Record(location, time, direction, meta);
+    var record = new FOUR.Record(location, time, direction, meta);
     if (this.data.length) {
       last.next = record;
       record.prev = last;
@@ -63,7 +67,7 @@ FOUR_D.Sequence.prototype = {
    * @param time
    * @param direction
    * @param meta
-   * @returns {FOUR_D.Record}
+   * @returns {FOUR.Record}
    */
   insert: function (location, time, direction, meta) {
     var autoInc = this.autoTime;
@@ -79,7 +83,7 @@ FOUR_D.Sequence.prototype = {
       }
     }
 
-    var record = new FOUR_D.Record(location, time, direction, meta);
+    var record = new FOUR.Record(location, time, direction, meta);
     if (first) {
       first.prev = record;
       record.next = first;
@@ -299,6 +303,4 @@ FOUR_D.Sequence.prototype = {
     return this.capSize;
   }
 
-};
-
-_.extend(FOUR_D.Sequence.prototype, EventEmitter);
+});

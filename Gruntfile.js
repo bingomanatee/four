@@ -4,7 +4,7 @@ module.exports = function (grunt) {
       concat: {
         base: {
           files: {
-            'build/4d.js': [
+            'build/FOUR.js': [
               'src/node.events.js',
               'src/index.js',
               'src/Record.js',
@@ -16,11 +16,11 @@ module.exports = function (grunt) {
 
       umd: {
         fork: {
-          src: 'build/4d.js',
-          dest: '4d.js',
-          objectToExport: 'FOUR_D',
-          amdModuleId: 'FOUR_D',
-          globalAlias: 'FOUR_D',
+          src: 'build/FOUR.js',
+          dest: 'FOUR.js',
+          objectToExport: 'FOUR',
+          amdModuleId: 'FOUR',
+          globalAlias: 'FOUR',
           deps: {
             'default': ['_', 'Fools', 'THREE'],
             cjs: ['lodash', 'fools', 'three']

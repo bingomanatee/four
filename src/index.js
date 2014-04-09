@@ -1,5 +1,17 @@
 var Vector3 = THREE.Vector3;
-var FOUR_D = {
+var FOUR = {
+
+  inherits: function (ctor, superCtor) { // taken from node.js
+    ctor.super_ = superCtor;
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  },
 
   stat: {
 

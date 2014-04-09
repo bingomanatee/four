@@ -1,14 +1,11 @@
-var FOUR_D = require('./../4d');
+var FOUR = require('./../FOUR');
 require('chai').should();
 var _ = require('lodash');
 var util = require('util');
 var THREE = require('three');
+var xyz = require('./xyz');
 
-function xyz(p) {
-  return _.pick(p, 'x', 'y', 'z');
-}
-
-describe('4D', function () {
+describe('FOUR', function () {
   describe('tangents and median location', function () {
 
     describe('medianLocation', function () {
@@ -16,7 +13,7 @@ describe('4D', function () {
       var sequence;
 
       before(function () {
-        sequence = new FOUR_D.Sequence({data: [
+        sequence = new FOUR.Sequence({data: [
           [0, 0, 0],
           [1, 1, 1],
           [2, 10, 2],
@@ -72,7 +69,7 @@ describe('4D', function () {
       var record;
 
       before(function () {
-        record = new FOUR_D.Record({x: 1, y: 1, z: 1});
+        record = new FOUR.Record({x: 1, y: 1, z: 1});
 
         it('should be able to get a normal vector from locationToVector', function () {
 
@@ -97,7 +94,7 @@ describe('4D', function () {
       var sequence;
 
       before(function () {
-        sequence = new FOUR_D.Sequence({data: [
+        sequence = new FOUR.Sequence({data: [
           [0, 0, 0],
           [1, 1, 1],
           [2, 10, 2],
@@ -137,7 +134,7 @@ describe('4D', function () {
       var sequence;
 
       before(function () {
-        sequence = new FOUR_D.Sequence({data: _.map(_.range(0, 36), function (x, i) {
+        sequence = new FOUR.Sequence({data: _.map(_.range(0, 36), function (x, i) {
 
           return [Math.sin(Math.PI * x / 10), i / 2, 0];
 
@@ -161,7 +158,7 @@ describe('4D', function () {
       var sequence2;
       before(function () {
 
-        sequence = new FOUR_D.Sequence({
+        sequence = new FOUR.Sequence({
           autoInc: true,
           data: [
             [0, 0, 0],
@@ -172,7 +169,7 @@ describe('4D', function () {
           ]
 
         });
-        sequence2 = new FOUR_D.Sequence({
+        sequence2 = new FOUR.Sequence({
           autoInc: true,
           data: [
             [0, 0, 0],
@@ -197,90 +194,5 @@ describe('4D', function () {
 
     });
 
-    describe('smoothing', function () {
-
-      var sequence;
-
-      before(function () {
-        sequence = new FOUR_D.Sequence({data: [
-          [0, 0, 0],
-          [1, 1, 1],
-          [2, 10, 2],
-          [3, 3, 3],
-          [4, 4, 4]
-        ]});
-      });
-
-      it('should be able to generate smooth locations at each point', function () {
-        var record = sequence.last();
-        xyz(record.smoothLoc(0)).should.eql({x: 4, y: 4, z: 4});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 4, y: 4, z: 4});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 4, y: 4, z: 4});
-
-        record = record.prev;
-        xyz(record.smoothLoc(0)).should.eql({x: 3, y: 3, z: 3});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 3.5, y: 3.5, z: 3.5});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 3.25, y: 3.25, z: 3.25});
-
-        record = record.prev;
-        xyz(record.smoothLoc(0)).should.eql({x: 2, y: 10, z: 2});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 2.75, y: 6.75, z: 2.75});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 2.3125, y: 8.3125, z: 2.3125});
-
-        record = record.prev;
-        xyz(record.smoothLoc(0)).should.eql({x: 1, y: 1, z: 1});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 1.875, y: 3.875, z: 1.875});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 1.328125, y: 2.828125, z: 1.328125});
-
-        record = record.prev;
-        xyz(record.smoothLoc(0)).should.eql({x: 0, y: 0, z: 0});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 0.9375, y: 1.9375, z: 0.9375});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 0.33203125, y: 0.70703125, z: 0.33203125});
-      });
-    });
-
-    // because of caching we have to make sure it works no matter which order you go in
-    describe('smoothing - other order', function () {
-
-      var sequence;
-
-      before(function () {
-        sequence = new FOUR_D.Sequence({data: [
-          [0, 0, 0],
-          [1, 1, 1],
-          [2, 10, 2],
-          [3, 3, 3],
-          [4, 4, 4]
-        ]});
-      });
-
-      it('should be able to smooth locations at each point', function () {
-
-        var record = sequence.first();
-        xyz(record.smoothLoc(0)).should.eql({x: 0, y: 0, z: 0});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 0.9375, y: 1.9375, z: 0.9375});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 0.33203125, y: 0.70703125, z: 0.33203125});
-
-        record = record.next;
-        xyz(record.smoothLoc(0)).should.eql({x: 1, y: 1, z: 1});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 1.875, y: 3.875, z: 1.875});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 1.328125, y: 2.828125, z: 1.328125});
-
-        record = record.next;
-        xyz(record.smoothLoc(0)).should.eql({x: 2, y: 10, z: 2});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 2.75, y: 6.75, z: 2.75});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 2.3125, y: 8.3125, z: 2.3125});
-
-        record = record.next;
-        xyz(record.smoothLoc(0)).should.eql({x: 3, y: 3, z: 3});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 3.5, y: 3.5, z: 3.5});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 3.25, y: 3.25, z: 3.25});
-
-        record = record.next;
-        xyz(record.smoothLoc(0)).should.eql({x: 4, y: 4, z: 4});
-        xyz(record.smoothLoc(0.5)).should.eql({x: 4, y: 4, z: 4});
-        xyz(record.smoothLoc(0.25)).should.eql({x: 4, y: 4, z: 4});
-      });
-    });
   });
 });
