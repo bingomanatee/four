@@ -24,7 +24,6 @@ var domain;
 function EventEmitter() {
     EventEmitter.init.call(this);
 }
-module.exports = EventEmitter;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;

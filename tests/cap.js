@@ -34,7 +34,7 @@ describe('FOUR', function () {
         sequence.addItem([10, 20, 40]);
         sequence.first().v().x.should.eql(1);
       });
-      
+
       it('should change after adding at the start', function(){
         sequence.addItem([10, 20, 40], true);
         sequence.first().v().x.should.eql(10);

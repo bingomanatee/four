@@ -1,5 +1,3 @@
-var util = require('util');
-
 /**
  * note - Sequence assumes data is in descending order -- i.e.,first record is the most recent.
  *

@@ -24,7 +24,6 @@ var domain;
 function EventEmitter() {
     EventEmitter.init.call(this);
 }
-module.exports = EventEmitter;
 
 // Backwards-compat with node 0.10.x
 EventEmitter.EventEmitter = EventEmitter;
@@ -654,8 +653,6 @@ FOUR.Record.prototype = {
   }
 
 };
-var util = require('util');
-
 /**
  * note - Sequence assumes data is in descending order -- i.e.,first record is the most recent.
  *
