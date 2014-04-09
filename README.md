@@ -46,7 +46,9 @@ the x,y.z coordinates of the point. This is the raw input value and so can be
 a number of formats. The `v()` or `smoothLoc()` methods will always return a Vector3
 value for location and so are the preferred sources of truth for location.
 
-### direction{various}
+#### direction{various}
+the x, y, z euler angles of the direction. Not currently exploited.
+
 ### Methods
 
 Many methods have a "smoothing" value. Smoothed location uses an (exponential smoothing)[http://en.wikipedia.org/wiki/Exponential_smoothing]
