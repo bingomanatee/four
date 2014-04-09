@@ -480,24 +480,21 @@ FOUR.Record.prototype = {
   },
 
   tangent: function (smoothing) {
-    if (!smoothing) {
-
-    }
 
     var next = this.next;
     var prev = this.prev;
     var prevSmoothLoc, nextSmoothLoc;
-    var sl = this.smoothLoc(smoothing);
+    var sl = this.smoothLoc(smoothing).clone();
     if (next) {
-      nextSmoothLoc = next.smoothLoc(smoothing);
+      nextSmoothLoc = next.smoothLoc(smoothing).clone();
       if (prev) {
-        prevSmoothLoc = prev.smoothLoc(smoothing);
+        prevSmoothLoc = prev.smoothLoc(smoothing).clone();
         return prevSmoothLoc.sub(nextSmoothLoc).normalize();
       } else {
         return sl.sub(nextSmoothLoc).normalize();
       }
     } else if (prev) {
-      prevSmoothLoc = prev.smoothLoc(smoothing);
+      prevSmoothLoc = prev.smoothLoc(smoothing).clone();
       return prevSmoothLoc.sub(sl).normalize();
     } else {
       return new Vector3();
@@ -704,7 +701,7 @@ FOUR.Sequence.prototype, {
   DZ: 'dz',
 
   add: function (location, time, direction, meta) {
-    if (this.capSize && this.capSize >= this.data.length){
+    if (this.capSize && this.capSize <= this.data.length){
       return null;
     }
     var last = this.last();

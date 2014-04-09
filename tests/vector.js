@@ -103,26 +103,40 @@ describe('FOUR', function () {
         ]});
       });
 
-      it('should be able to generate tangents to each point', function () {
+      it('should be able to generate tangents to each point [4]', function () {
 
         var record = sequence.last();
 
         xyz(record.tangent(0)).should.eql(xyz(new THREE.Vector3(-1, -1, -1).normalize()));
         xyz(record.tangent(0.5)).should.eql(xyz(new THREE.Vector3(-1, -1, -1).normalize()));
+      });
 
+      it('should be able to generate tangents to each point [3]', function () {
+        var record = sequence.last();
         record = record.prev;
         xyz(record.tangent(0)).should.eql(xyz(new THREE.Vector3(2 - 4, 10 - 4, 2 - 4).normalize()));
-        xyz(record.tangent(0.5)).should.eql(xyz(new THREE.Vector3(2.75 - 4, 6.75 - 4, 2.75 - 4).normalize()));
+        xyz(record.tangent(0.5)).should.eql(xyz({ x: -0.382359556450936, y: 0.84119102419206, z: -0.382359556450936 }));
+      });
 
+      it('should be able to generate tangents to each point [2]', function () {
+        var record = sequence.last();
+        record = record.prev;
         record = record.prev;
         xyz(record.tangent(0)).should.eql(xyz(new THREE.Vector3(-2, -2, -2).normalize()));
         xyz(record.tangent(0.5)).should.eql(xyz(new THREE.Vector3(1.875 - 3.5, 3.875 - 3.5, 1.875 - 3.5).normalize()));
+      });
 
+      it('should be able to generate tangents to each point [1]', function () {
+        var record = sequence.last();
+        record = record.prev;
+        record = record.prev;
         record = record.prev;
         xyz(record.tangent(0)).should.eql(xyz(new THREE.Vector3(-2, -10, -2).normalize()));
         xyz(record.tangent(0.5)).should.eql(xyz(new THREE.Vector3(0.9375 - 2.75, 1.9375 - 6.75, 0.9375 - 2.75).normalize()));
+      });
 
-        record = record.prev;
+      it('should be able to generate tangents to each point [0]', function () {
+        record = sequence.first();
         xyz(record.tangent(0)).should.eql(xyz(new THREE.Vector3(-1, -1, -1).normalize()));
         xyz(record.tangent(0.5)).should.eql(xyz(new THREE.Vector3(-0.9375, -1.9375, -0.9375).normalize()));
 

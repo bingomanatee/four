@@ -33,7 +33,7 @@ FOUR.Sequence.prototype, {
   DZ: 'dz',
 
   add: function (location, time, direction, meta) {
-    if (this.capSize && this.capSize >= this.data.length){
+    if (this.capSize && this.capSize <= this.data.length){
       return null;
     }
     var last = this.last();
